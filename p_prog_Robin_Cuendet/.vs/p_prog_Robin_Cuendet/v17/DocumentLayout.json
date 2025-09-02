@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\pe50ftj\\Desktop\\p_prog\\p_prog_Robin_Cuendet\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F663000B-B4B9-4E09-8437-3F310C2C76A8}|p_prog_Robin_Cuendet\\p_prog_Robin_Cuendet.csproj|c:\\users\\pe50ftj\\desktop\\p_prog\\p_prog_robin_cuendet\\p_prog_robin_cuendet\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F663000B-B4B9-4E09-8437-3F310C2C76A8}|p_prog_Robin_Cuendet\\p_prog_Robin_Cuendet.csproj|solutionrelative:p_prog_robin_cuendet\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\pe50ftj\\Desktop\\p_prog\\p_prog_Robin_Cuendet\\p_prog_Robin_Cuendet\\Program.cs",
+              "RelativeDocumentMoniker": "p_prog_Robin_Cuendet\\Program.cs",
+              "ToolTip": "C:\\Users\\pe50ftj\\Desktop\\p_prog\\p_prog_Robin_Cuendet\\p_prog_Robin_Cuendet\\Program.cs",
+              "RelativeToolTip": "p_prog_Robin_Cuendet\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-02T11:16:49.189Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
