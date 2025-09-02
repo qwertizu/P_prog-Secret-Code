@@ -1,0 +1,7 @@
+C:\Users\pe50ftj\Desktop\p_prog\p_prog_Robin_Cuendet\p_prog_Robin_Cuendet\bin\Debug\p_prog_Robin_Cuendet.exe.config
+C:\Users\pe50ftj\Desktop\p_prog\p_prog_Robin_Cuendet\p_prog_Robin_Cuendet\bin\Debug\p_prog_Robin_Cuendet.exe
+C:\Users\pe50ftj\Desktop\p_prog\p_prog_Robin_Cuendet\p_prog_Robin_Cuendet\bin\Debug\p_prog_Robin_Cuendet.pdb
+C:\Users\pe50ftj\Desktop\p_prog\p_prog_Robin_Cuendet\p_prog_Robin_Cuendet\obj\Debug\p_prog_Robin_Cuendet.csproj.AssemblyReference.cache
+C:\Users\pe50ftj\Desktop\p_prog\p_prog_Robin_Cuendet\p_prog_Robin_Cuendet\obj\Debug\p_prog_Robin_Cuendet.csproj.CoreCompileInputs.cache
+C:\Users\pe50ftj\Desktop\p_prog\p_prog_Robin_Cuendet\p_prog_Robin_Cuendet\obj\Debug\p_prog_Robin_Cuendet.exe
+C:\Users\pe50ftj\Desktop\p_prog\p_prog_Robin_Cuendet\p_prog_Robin_Cuendet\obj\Debug\p_prog_Robin_Cuendet.pdb

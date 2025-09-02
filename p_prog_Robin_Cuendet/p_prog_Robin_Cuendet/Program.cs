@@ -19,8 +19,6 @@ namespace p_prog_SecretCode__RobinCuendet
 {
     internal class Program
     {
-
-
         static void Main(string[] args)
         {
             ConsoleKeyInfo cki;
@@ -68,7 +66,7 @@ namespace p_prog_SecretCode__RobinCuendet
 
             Console.Clear();
 
-            Console.WriteLine("=== SECCRET CODE ===\n");
+            Console.WriteLine("=== SECRET CODE ===\n");
             Console.WriteLine("Choisi un niveau :");
             Console.WriteLine("1. Débutant\t\t(1 à 6, sans doublons, indices visibles");
             Console.WriteLine("2. Intermédiaire\t(1 à 6, sans doublons, indices discrets");
@@ -101,7 +99,7 @@ namespace p_prog_SecretCode__RobinCuendet
             if (level < 3)
             {
                 maxNum = 6;
-                secretCode = SetCode(maxNum);
+                SetCodeWithoutRepeatNumbers(secretCode);
             }
             else if (level == 3)
             {
@@ -114,6 +112,8 @@ namespace p_prog_SecretCode__RobinCuendet
                 secretCode = SetCode(maxNum);
             }
 
+            Console.Title = "Code Secret : " + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3];
+
             Console.WriteLine("=== SECRET CODE NIVEAU {0} ===\nEssais :\n\n", level);
             do
             {
@@ -123,14 +123,7 @@ namespace p_prog_SecretCode__RobinCuendet
                     triedNumber = Convert.ToInt32(Console.ReadLine());
 
                     tries++;
-                    if (level == 1 || level == 3)
-                    {
-                        WriteAnswerLevel1And3(triedNumber, secretCode, tries);
-                    }
-                    else
-                    {
-                        WriteAnswerLevel2And4(triedNumber, secretCode);
-                    }
+                    CheckEnteredNumber(triedNumber, secretCode, tries, level);
                 }
                 catch
                 {
@@ -156,14 +149,18 @@ namespace p_prog_SecretCode__RobinCuendet
 
             return code;
         }
-        static void WriteAnswerLevel1And3(int numbers, int[] Code, int tries)
+
+        static void CheckEnteredNumber(int numbers, int[] Code, int tries, byte level)
         {
             short num = 0;
+            byte[] results = new byte[4];
             bool[] goodNum = new bool[4];
             char[] digits = new char[4];
 
             for (int i = 0; i < 4; i++)
             {
+                results[i] = 1;
+                goodNum[i] = false;
                 digits[i] = numbers.ToString()[num];
                 num++;
             }
@@ -172,34 +169,92 @@ namespace p_prog_SecretCode__RobinCuendet
             {
                 for (int j = 0; j < 4; j++)
                 {
-                    if (Code[j] == digits[i] - '0' && i == j && goodNum[i] == false)
+                    if (Code[i] == digits[i] - '0')
                     {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        goodNum[i] = true;
+                        results[i] = 3;
+                        goodNum[j] = true;
                         j = 4;
                     }
-                    else if (digits[i] - '0' == Code[j] && goodNum[i] == false)
+                    else if (digits[i] - '0' == Code[j])
                     {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        results[i] = 2;
                         j = 4;
                     }
                     else
                     {
-                        Console.ForegroundColor = ConsoleColor.Gray;
+                        results[i] = 1;
                     }
 
                 }
-                Console.Write("■");
+                Console.Write(results[i]);
             }
-            for (int i = 0; 1 < 4; i++)
+
+            if (level == 1 || level == 3)
+            {
+                WriteAnswerLevel1And3(results);
+            }
+            else
+            {
+                WriteAnswerLevel2And4(results);
+            }
+            for (int i = 0;i < 4; i++)
             {
 
             }
         }
-
-        static void WriteAnswerLevel2And4(int numbers, int[] Code)
+        static void WriteAnswerLevel1And3(byte[]results)
         {
+            for (int i = 0; i < 4; i++)
+            {
+                if (results[i] == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }else if (results[i] == 2)
+                {
+                    Console.ForegroundColor= ConsoleColor.Yellow;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }
+                Console.Write('■');
+            }
+        }
 
+        static void WriteAnswerLevel2And4(byte[] results)
+        {
+            byte goods = 0, ok = 0,bads = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                if (results[i] == 1)
+                {
+                    bads++;
+                }
+                else if (results[i] == 2)
+                {
+                    ok++;
+                }
+                else
+                {
+                    goods++;
+                }
+            }
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("→ {0} bien placé(s), {1} mal placé(s), {2} fausse(s)", goods, ok, bads);
+        }
+
+        static void SetCodeWithoutRepeatNumbers(int[] Code)
+        {
+            Random rnd = new Random();
+            int newDigit;
+            for(int i = 0; i < 4; i++)
+            {
+                do
+                {
+                    newDigit = rnd.Next(1, 6);
+                } while (Array.IndexOf(Code, newDigit, 0, i) >= 0);
+                Code[i] = newDigit;
+            }
         }
 
 
