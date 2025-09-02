@@ -22,119 +22,125 @@ namespace p_prog_SecretCode__RobinCuendet
         static void Main(string[] args)
         {
             ConsoleKeyInfo cki;
+            string restart = "o";
+            bool won = false;
             byte level = 0;
             int tries = 1, maxNum, triedNumber;
             int[] secretCode = new int[4];
 
-
-            //écriture tu titre
-            Console.WriteLine("╔════════════════════ Robin Cuendet ════════════════════╗");
-            Console.WriteLine("║                                                       ║ ");
-            Console.WriteLine("║          Bienvenue dans le jeu : Secret Code          ║ ");
-            Console.WriteLine("║                                                       ║ ");
-            Console.WriteLine("╚═══════════════════════════════════════════════════════╝ ");
-
-            //écriture des règle du jeu
-            Console.WriteLine("Un code secret composé de 4 chiffres est généré.\nÀ toi de le découvrire en 10 essais maximum !\n");
-            Console.WriteLine("À chaques essai, tu reçois un indice selon le niveau choisi\n\nPour les niveaux 1 et 3 avec indices visibles : ");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("■");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine(" : chiffre bien placé");
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("■");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine(" : chiffre correcte et bien placé\n■ : chiffre bien placé\n");
-            Console.WriteLine("Exemple :\ncode secret : 1234 (caché)\n votre essai : 1325\nIndice :");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("■");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("■■");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine("■ (1 bien placé, 2 mal placé, 1 absent)\n");
-            Console.WriteLine("Pour les niveaux 2 et 4 avec indices discrets : \nExemple :\nCode secret : 5413 (caché)\nVotre essai : 1234 \nIndice :");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("→ 0 bien placé(s), 3 mal placé(s)\n");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.Write("Appuie sur une touche pour commencer...\n");
-
             do
             {
-                cki = Console.ReadKey();
-            } while (cki == null);
 
-            Console.Clear();
+                //écriture tu titre
+                Console.WriteLine("╔════════════════════ Robin Cuendet ════════════════════╗");
+                Console.WriteLine("║                                                       ║ ");
+                Console.WriteLine("║          Bienvenue dans le jeu : Secret Code          ║ ");
+                Console.WriteLine("║                                                       ║ ");
+                Console.WriteLine("╚═══════════════════════════════════════════════════════╝ ");
 
-            Console.WriteLine("=== SECRET CODE ===\n");
-            Console.WriteLine("Choisi un niveau :");
-            Console.WriteLine("1. Débutant\t\t(1 à 6, sans doublons, indices visibles");
-            Console.WriteLine("2. Intermédiaire\t(1 à 6, sans doublons, indices discrets");
-            Console.WriteLine("3. Avancé\t\t(1 à 8, sans doublons, indices visibles");
-            Console.WriteLine("4. Expert\t\t(1 à 9, sans doublons, indices discrets\n");
+                //écriture des règle du jeu
+                Console.WriteLine("Un code secret composé de 4 chiffres est généré.\nÀ toi de le découvrire en 10 essais maximum !\n");
+                Console.WriteLine("À chaques essai, tu reçois un indice selon le niveau choisi\n\nPour les niveaux 1 et 3 avec indices visibles : ");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("■");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine(" : chiffre bien placé");
 
-            do
-            {
-                Console.Write("Votre choix (1-4)");
-                level = 0;
-                try
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("■");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine(" : chiffre correcte et bien placé\n■ : chiffre bien placé\n");
+                Console.WriteLine("Exemple :\ncode secret : 1234 (caché)\n votre essai : 1325\nIndice :");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("■");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("■■");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("■ (1 bien placé, 2 mal placé, 1 absent)\n");
+                Console.WriteLine("Pour les niveaux 2 et 4 avec indices discrets : \nExemple :\nCode secret : 5413 (caché)\nVotre essai : 1234 \nIndice :");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("→ 0 bien placé(s), 3 mal placé(s)\n");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write("Appuie sur une touche pour commencer...\n");
+
+                do
                 {
-                    level = Convert.ToByte(Console.ReadLine());
-                }
-                catch
+                    cki = Console.ReadKey();
+                } while (cki == null);
+
+                Console.Clear();
+
+                Console.WriteLine("=== SECRET CODE ===\n");
+                Console.WriteLine("Choisi un niveau :");
+                Console.WriteLine("1. Débutant\t\t(1 à 6, sans doublons, indices visibles");
+                Console.WriteLine("2. Intermédiaire\t(1 à 6, sans doublons, indices discrets");
+                Console.WriteLine("3. Avancé\t\t(1 à 8, sans doublons, indices visibles");
+                Console.WriteLine("4. Expert\t\t(1 à 9, sans doublons, indices discrets\n");
+
+                do
                 {
-                    Console.WriteLine("Choix invalide. Essai encore");
-                }
-                if (level < 1 || level > 4)
+                    Console.Write("Votre choix (1-4)");
+                    level = 0;
+                    try
+                    {
+                        level = Convert.ToByte(Console.ReadLine());
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Choix invalide. Essai encore");
+                    }
+                    if (level < 1 || level > 4)
+                    {
+                        Console.WriteLine("Choix invalide. Essai encore");
+
+                    }
+
+
+                } while (level == 0);
+
+                Console.Clear();
+
+                if (level < 3)
                 {
-                    Console.WriteLine("Choix invalide. Essai encore");
-
+                    maxNum = 6;
+                    SetCodeWithoutRepeatNumbers(secretCode);
                 }
-
-
-            } while (level == 0);
-
-            Console.Clear();
-
-            if (level < 3)
-            {
-                maxNum = 6;
-                SetCodeWithoutRepeatNumbers(secretCode);
-            }
-            else if (level == 3)
-            {
-                maxNum = 8;
-                secretCode = SetCode(maxNum);
-            }
-            else
-            {
-                maxNum = 9;
-                secretCode = SetCode(maxNum);
-            }
-
-            Console.Title = "Code Secret : " + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3];
-
-            Console.WriteLine("=== SECRET CODE NIVEAU {0} ===\nEssais :\n\n", level);
-            do
-            {
-                Console.Write("Essai {0}/10 :\nEntre 4 chiffres entre 1 et {1} (ex: 1234) : ", tries, maxNum);
-                try
+                else if (level == 3)
                 {
-                    triedNumber = Convert.ToInt32(Console.ReadLine());
-
-                    tries++;
-                    CheckEnteredNumber(triedNumber, secretCode, tries, level);
+                    maxNum = 8;
+                    secretCode = SetCode(maxNum);
                 }
-                catch
+                else
                 {
-                    Console.WriteLine("Tu n'as pas entré un nombre ! essaie de nouveau");
+                    maxNum = 9;
+                    secretCode = SetCode(maxNum);
                 }
 
-            } while (tries <= 10);
+                Console.Title = "Code Secret : " + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3];
 
-            Console.Read();
+                Console.WriteLine("=== SECRET CODE NIVEAU {0} ===\nEssais :\n\n", level);
+                do
+                {
+                    Console.Write("Essai {0}/10 :\nEntre 4 chiffres entre 1 et {1} (ex: 1234) : ", tries, maxNum);
+                    try
+                    {
+                        triedNumber = Convert.ToInt32(Console.ReadLine());
 
+                        tries++;
+                        won = CheckEnteredNumber(triedNumber, secretCode, tries, level, won);
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Tu n'as pas entré un nombre ! essaie de nouveau");
+                    }
 
+                } while (tries <= 10 || won == true);
+
+                Console.WriteLine("Voulez-vous recommencer? (o/n)");
+
+                restart = Console.ReadLine();
+
+            }while (restart.ToLower() == "o");
 
         }
         static int[] SetCode(int numMax)
@@ -150,7 +156,7 @@ namespace p_prog_SecretCode__RobinCuendet
             return code;
         }
 
-        static void CheckEnteredNumber(int numbers, int[] Code, int tries, byte level)
+        static bool CheckEnteredNumber(int numbers, int[] Code, int tries, byte level, bool won)
         {
             short num = 0;
             byte[] results = new byte[4];
@@ -199,8 +205,17 @@ namespace p_prog_SecretCode__RobinCuendet
             }
             for (int i = 0;i < 4; i++)
             {
-
+                if (results[i] == 3)
+                {
+                    won = true;
+                }  
+                else
+                {
+                    won = false;
+                    i = 4;
+                }
             }
+            return won;
         }
         static void WriteAnswerLevel1And3(byte[]results)
         {
