@@ -63,6 +63,7 @@ namespace p_prog_SecretCode__RobinCuendet
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write("Appuie sur une touche pour commencer...\n");
 
+                //regarde si une touhe est entrée 
                 do
                 {
                     cki = Console.ReadKey();
@@ -70,6 +71,7 @@ namespace p_prog_SecretCode__RobinCuendet
 
                 Console.Clear();
 
+                //écris les instruction du choix de niveaux
                 Console.WriteLine("=== SECRET CODE ===\n");
                 Console.WriteLine("Choisi un niveau :");
                 Console.WriteLine("1. Débutant\t\t(1 à 6, sans doublons, indices visibles");
@@ -84,15 +86,15 @@ namespace p_prog_SecretCode__RobinCuendet
                     try
                     {
                         level = Convert.ToByte(Console.ReadLine());
+                        if (level < 1 || level > 4)
+                        {
+                            Console.WriteLine("Choix invalide. Essai encore");
+
+                        }
                     }
                     catch
                     {
                         Console.WriteLine("Choix invalide. Essai encore");
-                    }
-                    if (level < 1 || level > 4)
-                    {
-                        Console.WriteLine("Choix invalide. Essai encore");
-
                     }
 
 
@@ -119,22 +121,40 @@ namespace p_prog_SecretCode__RobinCuendet
                 Console.Title = "Code Secret : " + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3];
 
                 Console.WriteLine("=== SECRET CODE NIVEAU {0} ===\nEssais :\n\n", level);
+                tries = 0;
                 do
                 {
                     Console.Write("Essai {0}/10 :\nEntre 4 chiffres entre 1 et {1} (ex: 1234) : ", tries, maxNum);
                     try
                     {
                         triedNumber = Convert.ToInt32(Console.ReadLine());
-
-                        tries++;
-                        won = CheckEnteredNumber(triedNumber, secretCode, tries, level, won);
+                        if (triedNumber > 1000 || triedNumber < 9999)
+                        {
+                            tries++;
+                            won = CheckEnteredNumber(triedNumber, secretCode, tries, level, won);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Le nombre ne va pas veuillez réessayer");
+                        }
                     }
                     catch
                     {
                         Console.WriteLine("Tu n'as pas entré un nombre ! essaie de nouveau");
                     }
 
-                } while (tries <= 10 || won == true);
+                    if (tries >= 10)
+                    {
+                        Console.WriteLine("vous avez perdu, le code était : {0}{1}{2}{3}", secretCode[0], secretCode[1], secretCode[2], secretCode[3]);
+                        break;
+                    }
+                    else if (won)
+                    {
+                        Console.WriteLine("Vous avez gagné");
+                        break;
+                    }
+
+                } while (true);
 
                 Console.WriteLine("Voulez-vous recommencer? (o/n)");
 
@@ -150,7 +170,7 @@ namespace p_prog_SecretCode__RobinCuendet
             for (int i = 0; i <= 3; i++)
             {
                 code[i] = rnd.Next(1, numMax);
-                Console.Write(code[i]);
+
             }
 
             return code;
@@ -158,41 +178,30 @@ namespace p_prog_SecretCode__RobinCuendet
 
         static bool CheckEnteredNumber(int numbers, int[] Code, int tries, byte level, bool won)
         {
-            short num = 0;
             byte[] results = new byte[4];
-            bool[] goodNum = new bool[4];
+            int[]allResponses = new int[10];
             char[] digits = new char[4];
 
             for (int i = 0; i < 4; i++)
             {
                 results[i] = 1;
-                goodNum[i] = false;
-                digits[i] = numbers.ToString()[num];
-                num++;
+                digits[i] = numbers.ToString()[i];
             }
 
             for (int i = 0; i < 4; i++)
             {
-                for (int j = 0; j < 4; j++)
+                if (Code.Contains(digits[i] - '0') && Code[i] != digits[i] - '0')
                 {
-                    if (Code[i] == digits[i] - '0')
-                    {
-                        results[i] = 3;
-                        goodNum[j] = true;
-                        j = 4;
-                    }
-                    else if (digits[i] - '0' == Code[j])
-                    {
-                        results[i] = 2;
-                        j = 4;
-                    }
-                    else
-                    {
-                        results[i] = 1;
-                    }
-
+                    results[i] = 2;
                 }
-                Console.Write(results[i]);
+                if (Code[i] == digits[i] - '0')
+                {
+                    results[i] = 3;
+                }
+                if (!Code.Contains(digits[i] - '0'))
+                {
+                    results[i] = 1;
+                }
             }
 
             if (level == 1 || level == 3)
@@ -203,6 +212,7 @@ namespace p_prog_SecretCode__RobinCuendet
             {
                 WriteAnswerLevel2And4(results);
             }
+
             for (int i = 0;i < 4; i++)
             {
                 if (results[i] == 3)
@@ -212,9 +222,10 @@ namespace p_prog_SecretCode__RobinCuendet
                 else
                 {
                     won = false;
-                    i = 4;
+                    break;
                 }
             }
+
             return won;
         }
         static void WriteAnswerLevel1And3(byte[]results)
@@ -234,6 +245,7 @@ namespace p_prog_SecretCode__RobinCuendet
                 }
                 Console.Write('■');
             }
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         static void WriteAnswerLevel2And4(byte[] results)
@@ -256,6 +268,7 @@ namespace p_prog_SecretCode__RobinCuendet
             }
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("→ {0} bien placé(s), {1} mal placé(s), {2} fausse(s)", goods, ok, bads);
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         static void SetCodeWithoutRepeatNumbers(int[] Code)
