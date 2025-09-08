@@ -158,6 +158,7 @@ namespace p_prog_SecretCode__RobinCuendet
 
                 Console.WriteLine("Voulez-vous recommencer? (o/n)");
 
+
                 restart = Console.ReadLine();
 
             }while (restart.ToLower() == "o");
@@ -178,6 +179,8 @@ namespace p_prog_SecretCode__RobinCuendet
 
         static bool CheckEnteredNumber(int numbers, int[] Code, int tries, byte level, bool won)
         {
+            int[] codeCopy = new int[4];
+            codeCopy = Code;
             byte[] results = new byte[4];
             int[]allResponses = new int[10];
             char[] digits = new char[4];
@@ -190,15 +193,20 @@ namespace p_prog_SecretCode__RobinCuendet
 
             for (int i = 0; i < 4; i++)
             {
-                if (Code.Contains(digits[i] - '0') && Code[i] != digits[i] - '0')
+                if (codeCopy[i] == digits[i] - '0')
+                {
+                    results[i] = 3;   
+                    codeCopy[i] = 0;
+                }
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (codeCopy.Contains(digits[i] - '0'))
                 {
                     results[i] = 2;
                 }
-                if (Code[i] == digits[i] - '0')
-                {
-                    results[i] = 3;
-                }
-                if (!Code.Contains(digits[i] - '0'))
+                else if (codeCopy[i] != 0)
                 {
                     results[i] = 1;
                 }
@@ -211,6 +219,11 @@ namespace p_prog_SecretCode__RobinCuendet
             else
             {
                 WriteAnswerLevel2And4(results);
+            }
+
+            for (int i = 0;  i < 4; i++)
+            {
+                Console.WriteLine(Code[i]);
             }
 
             for (int i = 0;i < 4; i++)
