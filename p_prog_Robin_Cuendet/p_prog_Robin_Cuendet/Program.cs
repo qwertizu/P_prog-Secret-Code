@@ -32,7 +32,7 @@ namespace p_prog_SecretCode__RobinCuendet
             {
 
                 //écriture tu titre
-                Console.WriteLine("╔════════════════════ Robin Cuendet ════════════════════╗");
+                Console.WriteLine("╔════════════════════ Robin Cuendet ════════════════════╗ ");
                 Console.WriteLine("║                                                       ║ ");
                 Console.WriteLine("║          Bienvenue dans le jeu : Secret Code          ║ ");
                 Console.WriteLine("║                                                       ║ ");
@@ -170,7 +170,7 @@ namespace p_prog_SecretCode__RobinCuendet
             Random rnd = new Random();
             for (int i = 0; i <= 3; i++)
             {
-                code[i] = rnd.Next(1, numMax);
+                code[i] = rnd.Next(1, numMax + 1);
 
             }
 
@@ -179,37 +179,40 @@ namespace p_prog_SecretCode__RobinCuendet
 
         static bool CheckEnteredNumber(int numbers, int[] Code, int tries, byte level, bool won)
         {
-            int[] codeCopy = new int[4];
-            codeCopy = Code;
             byte[] results = new byte[4];
             int[]allResponses = new int[10];
-            char[] digits = new char[4];
-
+            int[] digits = new int[4];
+            
             for (int i = 0; i < 4; i++)
             {
                 results[i] = 1;
-                digits[i] = numbers.ToString()[i];
+                digits[i] = numbers % 10;
+                numbers /= 10;
+                
             }
+
+            if(digits.Length != 0)
 
             for (int i = 0; i < 4; i++)
             {
-                if (codeCopy[i] == digits[i] - '0')
+                if (Code[i] == digits[i])
                 {
-                    results[i] = 3;   
-                    codeCopy[i] = 0;
+                    results[i] = 3;
                 }
+                
             }
 
             for (int i = 0; i < 4; i++)
             {
-                if (codeCopy.Contains(digits[i] - '0'))
+                if (digits.Contains(Code[i]) && Code[i] != digits[i])
                 {
                     results[i] = 2;
                 }
-                else if (codeCopy[i] != 0)
+                else if (Code[i] != digits[i])
                 {
                     results[i] = 1;
                 }
+                Console.Write(results[i]);
             }
 
             if (level == 1 || level == 3)
@@ -219,11 +222,6 @@ namespace p_prog_SecretCode__RobinCuendet
             else
             {
                 WriteAnswerLevel2And4(results);
-            }
-
-            for (int i = 0;  i < 4; i++)
-            {
-                Console.WriteLine(Code[i]);
             }
 
             for (int i = 0;i < 4; i++)
@@ -297,7 +295,5 @@ namespace p_prog_SecretCode__RobinCuendet
                 Code[i] = newDigit;
             }
         }
-
-
     }
 }
