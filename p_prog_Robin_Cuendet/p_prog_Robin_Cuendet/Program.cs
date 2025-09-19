@@ -22,15 +22,14 @@ namespace p_prog_SecretCode__RobinCuendet
         static void Main(string[] args)
         {
             ConsoleKeyInfo cki;
-            string restart = "o";
-            bool won = false;
+            string restart = "o", usrNumber;
+            bool won = false, doubleDigits = false ;
             byte level = 0;
-            int tries = 1, maxNum, triedNumber;
-            int[] secretCode = new int[4];
+            int tries = 1, maxNum;
+            int[] secretCode = new int[4], digits = new int[4], allTriedNum = new int[10];
 
             do
             {
-
                 //écriture tu titre
                 Console.WriteLine("╔════════════════════ Robin Cuendet ════════════════════╗ ");
                 Console.WriteLine("║                                                       ║ ");
@@ -79,78 +78,104 @@ namespace p_prog_SecretCode__RobinCuendet
                 Console.WriteLine("3. Avancé\t\t(1 à 8, sans doublons, indices visibles");
                 Console.WriteLine("4. Expert\t\t(1 à 9, sans doublons, indices discrets\n");
 
+
+                //boucle qui vérifie que le choix de niveau entré soi en norme
                 do
                 {
                     Console.Write("Votre choix (1-4)");
-                    level = 0;
-                    try
-                    {
-                        level = Convert.ToByte(Console.ReadLine());
-                        if (level < 1 || level > 4)
-                        {
-                            Console.WriteLine("Choix invalide. Essai encore");
 
-                        }
-                    }
-                    catch
+                    if (!byte.TryParse(Console.ReadLine(), out level) || level < 1 || level > 4)
                     {
                         Console.WriteLine("Choix invalide. Essai encore");
+                        level = 0;
                     }
-
-
                 } while (level == 0);
 
                 Console.Clear();
 
+
+                //choisit un nombre max du code secret selon le niveau
                 if (level < 3)
                 {
                     maxNum = 7;
-                    secretCode = SetCode(maxNum, level);
                 }
                 else if (level == 3)
                 {
                     maxNum = 9;
-                    secretCode = SetCode(maxNum, level);
                 }
                 else
                 {
                     maxNum = 10;
-                    secretCode = SetCode(maxNum, level);
                 }
 
-                Console.Title = "Code Secret : " + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3];
+                //crée le code secret
+                secretCode = SetCode(maxNum, level);
 
-                Console.WriteLine("=== SECRET CODE NIVEAU {0} ===\nEssais :\n\n", level);
-                tries = 0;
+                //change le titre de la console pour le code secret
+                Console.Title = "Code Secret : " + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3];
                 do
                 {
-                    Console.Write("Essai {0}/10 :\nEntre 4 chiffres entre 1 et {1} (ex: 1234) : ", tries, maxNum - 1);
-                    try
+                    doubleDigits = false;
+                    Console.Clear();
+
+                    Console.WriteLine("=== SECRET CODE NIVEAU {0} ===\nEssais :\n\n", level);
+                    
+
+                    for (int i = 1; i < tries-1; i++)
                     {
-                        triedNumber = Convert.ToInt32(Console.ReadLine());
-                        if (triedNumber > 1000 || triedNumber < 9999)
-                        {
-                            tries++;
-                            won = CheckEnteredNumber(triedNumber, secretCode, tries, level, won);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Le nombre ne va pas veuillez réessayer");
-                        }
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Tu n'as pas entré un nombre ! essaie de nouveau");
+
+                            Console.WriteLine(" {0}: {1}\n\n", i, allTriedNum[i]);
                     }
 
-                    if (tries >= 10)
+                    Console.Write("Essai {0}/10 :\nEntre 4 chiffres entre 1 et {1} (ex: 1234) : ", tries, maxNum - 1);
+
+                    //si le code n'est pas un nombre ou que le nombre est en dehors des limites, message d'erreur, sinon je normal
+                    usrNumber = Console.ReadLine();
+
+
+                    for (int i = 0; i < usrNumber.Length; i++)
                     {
-                        Console.WriteLine("vous avez perdu, le code était : {0}{1}{2}{3}", secretCode[0], secretCode[1], secretCode[2], secretCode[3]);
-                        break;
+                        digits[i] = usrNumber[i] - '0';
                     }
-                    else if (won)
+
+                    for (int i = 0; i < usrNumber.Length; i++)
+                    {
+                        if (digits[i] >= maxNum)
+                        {
+                            Console.WriteLine("tu ne peux pas entrer un nombre plus grand que la limite");
+                            doubleDigits = true;
+                            break;
+                        }
+
+                        if (Array.IndexOf(digits, digits[i], 0,i) >= 0 && level < 3)
+                        {
+                            doubleDigits = true;
+                            Console.WriteLine("Merci de ne pas entrer de doublons!");
+                            break;
+                        }
+                    }
+
+                    if (int.TryParse(usrNumber, out _) && usrNumber.Length == 4 && !doubleDigits)
+                    {
+                        tries++;
+                        won = CheckEnteredNumber(digits, secretCode, tries, level, won);
+                        allTriedNum[tries - 1] = Convert.ToInt32(usrNumber);
+                    }
+                    else if (!doubleDigits)
+                    {
+                        Console.WriteLine("entrée incorrecte! essaies de nouveau!");
+                    }
+
+                    //si le joueur à rentré le bon nombre il a gagné
+                    if (won)
                     {
                         Console.WriteLine("Vous avez gagné");
+                        break;
+                    }
+                    //si le joueur à utilisé ses 10 essais il a perdu
+                    else if (tries >= 10)
+                    {
+                        Console.WriteLine("vous avez perdu, le code était : {0}{1}{2}{3}", secretCode[0], secretCode[1], secretCode[2], secretCode[3]);
                         break;
                     }
 
@@ -184,19 +209,11 @@ namespace p_prog_SecretCode__RobinCuendet
             return code;
         }
 
-        static bool CheckEnteredNumber(int numbers, int[] Code, int tries, byte level, bool won)
+
+        static bool CheckEnteredNumber(int[] numbers, int[] Code, int tries, byte level, bool won)
         {
             byte[] results = new byte[4];
             int[]allResponses = new int[10];
-            int[] digits = new int[4];
-            
-            string userNumber=numbers.ToString();
-
-            for (int i = 0; i < digits.Length; i++)
-            {
-                digits[i] = userNumber[i] - '0';
-            }
-
 
             //for (int i = 3; i >= 0; i--)
             //{
@@ -207,18 +224,33 @@ namespace p_prog_SecretCode__RobinCuendet
 
             for (int i = 0; i < 4; i++)
             {
-                if (Code[i] == digits[i])
+                if (Array.IndexOf(Code, Code[i], 0, i) != -1)
+                {
+                    break;
+                }
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (Code[i] == numbers[i])
                 {
                     results[i] = 3;
                 }
-                else if (Code.Contains(digits[i]))
-                {
-                    results[i] = 2;
-                }
                 else
                 {
-                    results[i] = 1;
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (Code.Contains(numbers[i]) && Code[i] != numbers[i])
+                        {
+                            results[i] = 2;
+                        }
+                        else
+                        {
+                            results[i] = 1;
+                        }
+                    }
                 }
+               
             }
 
             if (level == 1 || level == 3)
