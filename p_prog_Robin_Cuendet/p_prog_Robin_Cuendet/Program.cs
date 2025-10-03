@@ -1,40 +1,35 @@
 ﻿///ETML
 ///Auteur : Robin Cuendet
-///Date     29.08.2025
-///Description : 
+///Date   :  29.08.2025
+///Description : jeu dont le but est de trouver un code secret généré aléatoirement
 
 
 using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace p_prog_SecretCode__RobinCuendet
 {
     internal class Program
     {
-        //longueur du code secret, nombre maximal d'essai
-        const byte CODELENGH = 4, MAXTRIES = 10;
-        static void Main(string[] args)
+        const byte CODELENGH = 2;                               //nombre maximal d'essai
+        const byte MAXTRIES = 10;                               //longueur du code secret
+        static void Main()
         {
-            
+
             ConsoleKeyInfo cki;
-            //touche 
-            string restart = "o", usrNumber;
+            string restart = "o";                               //caractère rentré par le joueur pour recommencer
+            string usrNumber;                                   //code que le joueur va renter pour trouver le code secret en string
             do
             {
-                byte level = 0;
-                int[] secretCode = new int[CODELENGH], digits = new int[CODELENGH];
-                int tries = 1, maxNum = 0;
-                bool won = false, wrongNum = true;
-                string[] allTriedNum = new string[MAXTRIES];
-                //Ecrtit le titre avec règles
+                byte level = 0;                                 //difficulté du je choisi par le joueur
+                int[] secretCode = new int[CODELENGH];          //code secret que le joueur devra trouver
+                int []digits = new int[CODELENGH];              //code que le joueur va renter pour trouver le code secret en int
+                string[] allTriedNum = new string[MAXTRIES];    //collection de tout les essais rentré par le joueur
+                int tries = 1;                                  //nombre d'essais du joueur
+                int maxNum = 0;                                 //chiffre maximal généré dans le code
+                bool won = false;                               //dit si le joueur a gagné
+                bool wrongNum = true;                           //dit si le joueur a entré un nombre incorrect
+
+                //écrit le titre avec règles
                 WriteTitle();
 
                 //attend qu'une touche est entrée pour continuer
@@ -93,18 +88,22 @@ namespace p_prog_SecretCode__RobinCuendet
                 Console.WriteLine("=== SECRET CODE NIVEAU {0} ===\nEssais :\n\n", level);
                 do
                 {
+                    //boucle qui demande au joueur d'entrer un nombre tant qu'il ne va pas
                     do
                     {
                         wrongNum = false;
 
-                        Console.Write("Essai {0}/10 :\nEntre 4 chiffres entre 1 et {1} (ex: 1234) : ", tries, maxNum - 1);
+                        Console.Write("Essai {0}/{1} :\nEntre 4 chiffres entre 1 et {2} (ex: 1234) : ", tries, MAXTRIES, maxNum - 1);
                         usrNumber = Console.ReadLine();
 
+                        //s'il n'y a pas qe des nombres ou que le code ne fais pas la bonne longueur chiffres, message d'erreur
                         if (int.TryParse(usrNumber, out _) && usrNumber.Length == CODELENGH)
                         {
                             for (int i = 0; i < CODELENGH; i++)
                             {
                                 digits[i] = usrNumber[i] - '0';
+
+                                //si les ^chiffres ne sont pas entre 1 et le nombre max, message d'erreur
                                 if (digits[i] >= maxNum || digits[i] <= 0)
                                 {
                                     Console.WriteLine("tu ne peux pas entrer un nombre plus petit que 1 ou plus grand que {0}", maxNum - 1);
@@ -112,6 +111,7 @@ namespace p_prog_SecretCode__RobinCuendet
                                     break;
                                 }
 
+                                //s'il y a des doublons et que le niveau est 1 ou 2, message d'erreur
                                 if (Array.IndexOf(digits, digits[i], 0, i) >= 0 && level < 3)
                                 {
                                     wrongNum = true;
@@ -129,13 +129,13 @@ namespace p_prog_SecretCode__RobinCuendet
 
                     Console.Clear();
                     allTriedNum[tries - 1] = usrNumber;
-                    Console.WriteLine("=== SECRET CODE NIVEAU {0} ===\nEssais :\n\n", level);
-                    for (int i = 0; allTriedNum[i] != null; i++)
+                    Console.WriteLine("=== SECRET CODE NIVEAU {0} ===\n\n\nEssais :\n\n", level);
+
+                    for (int i = 0; i < MAXTRIES && allTriedNum[i] != null; i++)
                     {
-                        Console.WriteLine("Essai {0} : {1}", i + 1, allTriedNum[i]) ;
+                        Console.Write("{0} : \t{1}\n\t", i + 1, allTriedNum[i]);
                         won = CheckEnteredNumber(allTriedNum[i], secretCode, tries, level, won);
                     }
-                    tries++;
 
                     //si le joueur à rentré le bon nombre il a gagné
                     if (won)
@@ -149,6 +149,7 @@ namespace p_prog_SecretCode__RobinCuendet
                         Console.WriteLine("vous avez perdu, le code était : {0}{1}{2}{3}", secretCode[0], secretCode[1], secretCode[2], secretCode[3]);
                         break;
                     }
+                    tries++;
 
                 } while (true);
 
@@ -157,12 +158,16 @@ namespace p_prog_SecretCode__RobinCuendet
 
                 restart = Console.ReadLine();
 
-            }while (restart.ToLower() == "o");
+            } while (restart.ToLower() == "o");
 
         }
 
+        /// <summary>
+        /// Affiche le titre du jeu avec les règles
+        /// </summary>
         static void WriteTitle()
         {
+            Console.Clear();
             //écriture tu titre
             Console.WriteLine("╔════════════════════ Robin Cuendet ════════════════════╗ ");
             Console.WriteLine("║                                                       ║ ");
@@ -177,7 +182,6 @@ namespace p_prog_SecretCode__RobinCuendet
             Console.Write("■");
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine(" : chiffre bien placé");
-
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write("■");
             Console.ForegroundColor = ConsoleColor.Gray;
@@ -195,15 +199,23 @@ namespace p_prog_SecretCode__RobinCuendet
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.Write("Appuie sur une touche pour commencer...\n");
         }
+        /// <summary>
+        /// Crée le code secret, avec doublons si ne niveau est 1 ou 2
+        /// </summary>
+        /// <param name="numMax"></param>
+        /// <param name="level"></param>
+        /// <returns>le code secret</returns>
         static int[] SetCode(int numMax, int level)
         {
-            int[] code = new int[CODELENGH];
-            Random rnd = new Random();
+            int[] code = new int[CODELENGH];                    //code secret à générer
+            Random rnd = new Random();                          //nombre random à générer
             for (int i = 0; i < CODELENGH; i++)
             {
                 code[i] = rnd.Next(1, numMax);
-                if (level == 1 || level == 2)
+                //si le niveau est 1 ou 2, regénérer le code sans doublons
+                if (level < 3)
                 {
+                    //tant qu'il y a des doublons, regénération du code
                     do
                     {
                         code[i] = rnd.Next(1, numMax);
@@ -214,13 +226,23 @@ namespace p_prog_SecretCode__RobinCuendet
 
             return code;
         }
+        /// <summary>
+        /// Crée un code de résultat selon le code entré et appelle des fonctions qui écrive le résultat
+        /// </summary>
+        /// <param name="digits"></param>
+        /// <param name="Code"></param>
+        /// <param name="tries"></param>
+        /// <param name="level"></param>
+        /// <param name="won"></param>
+        /// <returns></returns>
         static bool CheckEnteredNumber(string digits, int[] Code, int tries, byte level, bool won)
         {
-            int checkPlace;
-            byte[] results = new byte[CODELENGH];
-            int[]numbers = new int[CODELENGH];
-           
-            for (int i =0; i < CODELENGH; i++)
+            int checkPlace;                                     //index d'un nombre trouvé dans le code et le nombre entré par le joueur
+            byte[] results = new byte[CODELENGH];               //code disant quel nombre est juste (3), mal placé (2) ou faux (1) pour la génération de la réponse
+            int[] numbers = new int[CODELENGH];                 //tableau représentant le code en int
+
+            //initialisation du code string en int
+            for (int i = 0; i < CODELENGH; i++)
             {
                 numbers[i] = digits[i] - '0';
             }
@@ -234,13 +256,16 @@ namespace p_prog_SecretCode__RobinCuendet
 
             for (int i = 0; i < CODELENGH; i++)
             {
-                
-                checkPlace = Array.IndexOf(Code, numbers[i]);                           
+
+                checkPlace = Array.IndexOf(Code, numbers[i]);
+
+                //si le code d'index i est égale au nombre entré d'index i, mettre le résultat à 3 (juste)
                 if (Code[i] == numbers[i])
                 {
                     results[i] = 3;
                 }
-                else if (checkPlace != -1 && Code[checkPlace] != numbers[checkPlace])
+                //s'il y a le nombre i dans code, qu'il n'y a le meme nombre à la meme place et qu'il na pas déja été vétifié, mettre le résultat à 2 (mal placé), sinon mettre le resultat à 1(faux)
+                else if (checkPlace != -1 && Code[checkPlace] != numbers[checkPlace] && results[checkPlace] != 2)
                 {
                     results[i] = 2;
                 }
@@ -248,9 +273,10 @@ namespace p_prog_SecretCode__RobinCuendet
                 {
                     results[i] = 1;
                 }
-               
+
             }
 
+            //écriture du résultat selon le niveau choisi
             if (level == 1 || level == 3)
             {
                 WriteAnswerLevel1And3(results);
@@ -260,12 +286,14 @@ namespace p_prog_SecretCode__RobinCuendet
                 WriteAnswerLevel2And4(results);
             }
 
-            for (int i = 0;i < CODELENGH; i++)
+            //regarde si tout les nombre rentrés sont justes, si oui, le joueur a gagné
+            for (int i = 0; i < CODELENGH; i++)
             {
+                Console.Write(Code[i]);
                 if (results[i] == 3)
                 {
                     won = true;
-                }  
+                }
                 else
                 {
                     won = false;
@@ -275,16 +303,22 @@ namespace p_prog_SecretCode__RobinCuendet
 
             return won;
         }
-        static void WriteAnswerLevel1And3(byte[]results)
+        /// <summary>
+        /// Ecrit les réponses avec les carrés de couleur
+        /// </summary>
+        /// <param name="results"></param>
+        static void WriteAnswerLevel1And3(byte[] results)
         {
+            //pour chaque chiffre rentré change la couleur des carrés selon le résultat
             for (int i = 0; i < CODELENGH; i++)
             {
                 if (results[i] == 1)
                 {
                     Console.ForegroundColor = ConsoleColor.Gray;
-                }else if (results[i] == 2)
+                }
+                else if (results[i] == 2)
                 {
-                    Console.ForegroundColor= ConsoleColor.Yellow;
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                 }
                 else
                 {
@@ -295,9 +329,14 @@ namespace p_prog_SecretCode__RobinCuendet
             Console.WriteLine("\n");
             Console.ForegroundColor = ConsoleColor.Gray;
         }
+        /// <summary>
+        /// Ecris les réponses en disant le nombre de nombre juste, mal placé ou faux
+        /// </summary>
+        /// <param name="results"></param>
         static void WriteAnswerLevel2And4(byte[] results)
         {
-            byte goods = 0, ok = 0,bads = 0;
+            byte goods = 0, ok = 0, bads = 0;               //nombre de chiffre justes, mal placés et faux dans le code rentré
+            //compte le nombre de chiffres justes, mal placés et faux selon le résultat
             for (int i = 0; i < CODELENGH; i++)
             {
                 if (results[i] == 1)
