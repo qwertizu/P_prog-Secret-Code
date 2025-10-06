@@ -5,12 +5,13 @@
 
 
 using System;
+using System.Linq;
 
 namespace p_prog_SecretCode__RobinCuendet
 {
     internal class Program
     {
-        const byte CODELENGH = 2;                               //nombre maximal d'essai
+        const byte CODELENGH = 4;                               //nombre maximal d'essai
         const byte MAXTRIES = 10;                               //longueur du code secret
         static void Main()
         {
@@ -18,8 +19,6 @@ namespace p_prog_SecretCode__RobinCuendet
             ConsoleKeyInfo cki;
             string restart = "o";                               //caractère rentré par le joueur pour recommencer
             string usrNumber;                                   //code que le joueur va renter pour trouver le code secret en string
-            do
-            {
                 byte level = 0;                                 //difficulté du je choisi par le joueur
                 int[] secretCode = new int[CODELENGH];          //code secret que le joueur devra trouver
                 int []digits = new int[CODELENGH];              //code que le joueur va renter pour trouver le code secret en int
@@ -134,7 +133,7 @@ namespace p_prog_SecretCode__RobinCuendet
                     for (int i = 0; i < MAXTRIES && allTriedNum[i] != null; i++)
                     {
                         Console.Write("{0} : \t{1}\n\t", i + 1, allTriedNum[i]);
-                        won = CheckEnteredNumber(allTriedNum[i], secretCode, tries, level, won);
+                        won = CheckEnteredNumber(allTriedNum[i],secretCode , tries, level, won);
                     }
 
                     //si le joueur à rentré le bon nombre il a gagné
@@ -155,11 +154,13 @@ namespace p_prog_SecretCode__RobinCuendet
 
                 Console.WriteLine("Voulez-vous recommencer? (o/n)");
 
+            do
+            {
+                cki = Console.ReadKey();
+                if (restart.ToLower() != "n" || restart.Length != 1)
+                    Console.WriteLine("entrée invalide, veuillez recommencer");
 
-                restart = Console.ReadLine();
-
-            } while (restart.ToLower() == "o");
-
+            } while (restart.ToLower() != "n" || restart.ToLower() != "n");
         }
 
         /// <summary>
@@ -240,10 +241,13 @@ namespace p_prog_SecretCode__RobinCuendet
             int checkPlace;                                     //index d'un nombre trouvé dans le code et le nombre entré par le joueur
             byte[] results = new byte[CODELENGH];               //code disant quel nombre est juste (3), mal placé (2) ou faux (1) pour la génération de la réponse
             int[] numbers = new int[CODELENGH];                 //tableau représentant le code en int
+            int[]codeCopy = new int[CODELENGH];                 //copie du code secret pour la céréfications de nombre
 
-            //initialisation du code string en int
+            //copie de Code dans codeCopy
+            //initialisation du code (string) en int
             for (int i = 0; i < CODELENGH; i++)
             {
+                codeCopy[i] = Code[i];
                 numbers[i] = digits[i] - '0';
             }
 
@@ -254,22 +258,27 @@ namespace p_prog_SecretCode__RobinCuendet
             //    numbers /= 10;
             //}
 
-            for (int i = 0; i < CODELENGH; i++)
+            for(int i  = 0; i < CODELENGH; i++)
             {
-
-                checkPlace = Array.IndexOf(Code, numbers[i]);
-
-                //si le code d'index i est égale au nombre entré d'index i, mettre le résultat à 3 (juste)
                 if (Code[i] == numbers[i])
                 {
                     results[i] = 3;
+                    codeCopy[i] = 0;
                 }
-                //s'il y a le nombre i dans code, qu'il n'y a le meme nombre à la meme place et qu'il na pas déja été vétifié, mettre le résultat à 2 (mal placé), sinon mettre le resultat à 1(faux)
-                else if (checkPlace != -1 && Code[checkPlace] != numbers[checkPlace] && results[checkPlace] != 2)
+            }
+
+
+            for (int i = 0; i < CODELENGH; i++)
+            {
+
+                checkPlace = Array.IndexOf(codeCopy, numbers[i]);
+
+                if (codeCopy.Contains(numbers[i]) && results[i] != 3)
                 {
+                    codeCopy[checkPlace] = 0;
                     results[i] = 2;
                 }
-                else
+                else if (results[i] != 3)
                 {
                     results[i] = 1;
                 }
@@ -289,7 +298,6 @@ namespace p_prog_SecretCode__RobinCuendet
             //regarde si tout les nombre rentrés sont justes, si oui, le joueur a gagné
             for (int i = 0; i < CODELENGH; i++)
             {
-                Console.Write(Code[i]);
                 if (results[i] == 3)
                 {
                     won = true;
