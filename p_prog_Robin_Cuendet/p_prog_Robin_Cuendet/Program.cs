@@ -154,13 +154,21 @@ namespace p_prog_SecretCode__RobinCuendet
 
                 Console.WriteLine("Voulez-vous recommencer? (o/n)");
 
+            //attend que le joueur clique sur o ou n, donne un message d'erreur s'il ne le fais pas
             do
             {
                 cki = Console.ReadKey();
-                if (restart.ToLower() != "n" || restart.Length != 1)
+
+                if (cki.Key != ConsoleKey.N && cki.Key != ConsoleKey.O)
                     Console.WriteLine("entrée invalide, veuillez recommencer");
 
-            } while (restart.ToLower() != "n" || restart.ToLower() != "n");
+            } while (cki.Key != ConsoleKey.N && cki.Key != ConsoleKey.O);
+
+            //si la touche o à été cliquée, on recommance
+            if(cki.Key == ConsoleKey.O)
+            {
+                Main();
+            }
         }
 
         /// <summary>
